@@ -35,15 +35,15 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, onAnswer, questio
                 key={index}
                 onClick={() => onAnswer(option)}
                 variant="outline"
-                className="w-full justify-start text-left h-auto py-4 px-5 rounded-xl 
+                className="w-full justify-start text-left h-auto py-3 md:py-4 px-3 md:px-5 rounded-xl 
                            border-2 border-primary/60 bg-primary/10 backdrop-blur-sm 
-                           text-white text-lg 
+                           text-white text-base md:text-lg whitespace-normal
                            transition-all duration-200 ease-in-out
                            hover:bg-primary/30 hover:border-primary hover:scale-[1.02] hover:shadow-md
                            focus:bg-primary/30 focus:border-primary focus:scale-[1.02] focus:ring-2 focus:ring-primary/70 focus:shadow-md"
               >
-                {option.emoji && <span className="text-2xl mr-3">{option.emoji}</span>}
-                <span className="flex-1">{option.text}</span>
+                {option.emoji && <span className="text-xl md:text-2xl mr-2 md:mr-3 flex-shrink-0">{option.emoji}</span>}
+                <span className="flex-1 break-words">{option.text}</span>
               </Button>
             ))}
           </div>
