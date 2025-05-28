@@ -7,6 +7,7 @@ Techstack:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase
 
 # Application Architecture
 
