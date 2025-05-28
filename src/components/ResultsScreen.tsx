@@ -62,6 +62,9 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
       if (userInfo?.gender === 'gurl') return 'Soft Gurl Era 🌸';
       return 'Soft Era 🌸';
     }
+    if (result.id === 'unapologeticallyExtra') {
+      return 'Unapologetically<br/>Extra 💖';
+    }
     return result.title;
   };
 
@@ -78,8 +81,10 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
               <div class="mb-8">
                 <p class="text-2xl md:text-3xl font-semibold text-white mb-4">${userInfo?.username || 'Anonymous'}</p>
                 <p class="text-4xl md:text-5xl font-semibold text-white mb-8">Your Vibe Today Is...</p>
-                <h1 class="text-5xl md:text-7xl font-display text-white drop-shadow-lg mb-8 break-words">
-                  ${result.emoji} ${getGenderSpecificTitle()}
+                <h1 class="text-5xl md:text-7xl font-display text-white drop-shadow-lg mb-8">
+                  ${result.emoji} ${result.id === 'unapologeticallyExtra' ? 
+                    '<span class="block">Unapologetically</span><span class="block">Extra 💖</span>' : 
+                    getGenderSpecificTitle()}
                 </h1>
                 <p class="text-xl md:text-2xl mb-6 italic font-medium break-words">"${result.quote}"</p>
                 <p class="text-lg md:text-xl mb-8 font-medium break-words">${result.description}</p>
@@ -168,8 +173,12 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
           <CardDescription className="text-lg font-semibold text-white/80">
             Your Vibe Today Is...
           </CardDescription>
-          <CardTitle className="text-5xl md:text-6xl font-display text-white drop-shadow-md mt-2">
-            {result.emoji} {getGenderSpecificTitle()}
+          <CardTitle className="text-4xl md:text-5xl font-display text-white drop-shadow-lg mt-2">
+            {result.emoji} {result.id === 'unapologeticallyExtra' ? 
+              <span className="block">Unapologetically</span> : 
+              getGenderSpecificTitle()}
+            {result.id === 'unapologeticallyExtra' && 
+              <span className="block">Extra 💖</span>}
           </CardTitle>
         </CardHeader>
         <CardContent className="text-white">
