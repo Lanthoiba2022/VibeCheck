@@ -72,18 +72,20 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
         const tempDiv = document.createElement('div');
         tempDiv.className = 'fixed top-0 left-0 -z-50';
         tempDiv.innerHTML = `
-          <div class="w-[800px] ${result.color || 'bg-primary'} p-12 rounded-2xl text-white text-center">
-            <div class="mb-8">
-              <p class="text-2xl font-semibold text-white/80 mb-4">${userInfo?.username || 'Anonymous'}</p>
-              <p class="text-4xl font-semibold text-white/80 mb-8">Your Vibe Today Is...</p>
-              <h1 class="text-7xl font-display text-white drop-shadow-md mb-8">
-                ${result.emoji} ${getGenderSpecificTitle()}
-              </h1>
-              <p class="text-3xl mb-6 italic">"${result.quote}"</p>
-              <p class="text-2xl mb-8">${result.description}</p>
-            </div>
-            <div class="mt-12 pt-8 border-t border-white/20">
-              <p class="text-xl text-white/80">Find your vibe at vibe-check-v1.vercel.app ✨</p>
+          <div class="w-screen h-screen flex items-center justify-center ${result.color || 'bg-primary'}">
+            <div class="w-full max-w-4xl mx-auto p-8 md:p-12 text-white text-center">
+              <div class="mb-8">
+                <p class="text-2xl md:text-3xl font-semibold text-white/80 mb-4">${userInfo?.username || 'Anonymous'}</p>
+                <p class="text-4xl md:text-5xl font-semibold text-white/80 mb-8">Your Vibe Today Is...</p>
+                <h1 class="text-6xl md:text-8xl font-display text-white drop-shadow-md mb-8">
+                  ${result.emoji} ${getGenderSpecificTitle()}
+                </h1>
+                <p class="text-2xl md:text-3xl mb-6 italic">"${result.quote}"</p>
+                <p class="text-xl md:text-2xl mb-8">${result.description}</p>
+              </div>
+              <div class="mt-12 pt-8 border-t border-white/20">
+                <p class="text-xl text-white/80">Find your vibe at vibe-check-v1.vercel.app ✨</p>
+              </div>
             </div>
           </div>
         `;
@@ -92,8 +94,10 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
         const canvas = await html2canvas(tempDiv.firstElementChild as HTMLElement, {
           backgroundColor: null,
           scale: 2,
-          width: 800,
-          height: 1000
+          width: window.innerWidth,
+          height: window.innerHeight,
+          windowWidth: window.innerWidth,
+          windowHeight: window.innerHeight
         });
         
         const link = document.createElement('a');
