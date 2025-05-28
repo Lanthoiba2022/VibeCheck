@@ -77,20 +77,20 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
         tempDiv.innerHTML = `
           <div class="w-screen h-screen flex items-center justify-center ${result.color || 'bg-primary'} relative">
             <div class="absolute inset-0 bg-black/30"></div>
-            <div class="w-full max-w-5xl mx-auto p-8 md:p-12 text-white text-center relative z-10">
-              <div class="mb-8">
-                <p class="text-2xl md:text-3xl font-semibold text-white mb-4">${userInfo?.username || 'Anonymous'}</p>
-                <p class="text-4xl md:text-5xl font-semibold text-white mb-8">Your Vibe Today Is...</p>
-                <h1 class="text-5xl md:text-7xl font-display text-white drop-shadow-lg mb-8">
+            <div class="w-full max-w-6xl mx-auto p-4 md:p-8 text-white text-center relative z-10">
+              <div class="mb-6">
+                <p class="text-2xl md:text-3xl font-semibold text-white mb-3">${userInfo?.username || 'Anonymous'}</p>
+                <p class="text-3xl md:text-4xl font-semibold text-white mb-6">Your Vibe Today Is...</p>
+                <h1 class="text-4xl md:text-6xl font-display text-white drop-shadow-lg mb-6">
                   ${result.emoji} ${result.id === 'unapologeticallyExtra' ? 
-                    '<span class="block">Unapologetically</span><span class="block">Extra 💖</span>' : 
+                    '<span class="block mb-2">Unapologetically</span><span class="block">Extra 💖</span>' : 
                     getGenderSpecificTitle()}
                 </h1>
-                <p class="text-xl md:text-2xl mb-6 italic font-medium break-words">"${result.quote}"</p>
-                <p class="text-lg md:text-xl mb-8 font-medium break-words">${result.description}</p>
+                <p class="text-lg md:text-xl mb-4 italic font-medium break-words">"${result.quote}"</p>
+                <p class="text-base md:text-lg mb-6 font-medium break-words">${result.description}</p>
               </div>
-              <div class="mt-12 pt-8 border-t border-white/40">
-                <p class="text-lg md:text-xl text-white">Find your vibe at vibe-check-v1.vercel.app ✨</p>
+              <div class="mt-8 pt-6 border-t border-white/40">
+                <p class="text-base md:text-lg text-white">Find your vibe at vibe-check-v1.vercel.app ✨</p>
               </div>
             </div>
           </div>
