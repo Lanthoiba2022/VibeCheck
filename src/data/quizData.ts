@@ -103,7 +103,7 @@ export const vibeResults: VibeResult[] = [
     description: "Gentle, thoughtful, and probably loves a good aesthetic. Cozy vibes only.",
     emoji: "🧸",
     color: "bg-vibe-pink",
-    quote: "Be kind, rewind (your favorite comfort movie).",
+    quote: "Be kind, Time to rewind and rewatch your comfort movie - because self-care is a vibe ✨",
   },
   {
     id: "chaoticFun",
