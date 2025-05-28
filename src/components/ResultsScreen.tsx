@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { VibeResult } from '@/data/quizData';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,10 +6,10 @@ import { Share2, Send, Sparkles, Download, Image as ImageIcon, Facebook, Instagr
 import confetti from 'canvas-confetti';
 import type { UserInfo } from './QuizContainer';
 import html2canvas from 'html2canvas';
+import { toast } from '@/components/ui/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from '@/components/ui/use-toast';
 
 interface ResultsScreenProps {
   result: VibeResult;
@@ -19,8 +19,9 @@ interface ResultsScreenProps {
 }
 
 const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, onSaveAndShareVibe, userInfo }) => {
-  const [hasSavedOrAttemptedSave, setHasSavedOrAttemptedSave] = useState(false);
+  const resultCardRef = useRef<HTMLDivElement>(null);
   const [showSocialDialog, setShowSocialDialog] = useState(false);
+  const [hasSavedOrAttemptedSave, setHasSavedOrAttemptedSave] = useState(false);
   const [socialProfiles, setSocialProfiles] = useState({
     instagram: '',
     twitter: '',
@@ -28,7 +29,6 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
     displayName: userInfo?.username || '',
     isAnonymous: false
   });
-  const resultCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Trigger confetti when the results screen appears
@@ -121,25 +121,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
     }
   };
 
-  const handleShowcase = async () => {
-    setShowSocialDialog(true);
-  };
-
-  const handleSocialSubmit = async () => {
-    if (!hasSavedOrAttemptedSave && userInfo && result) {
-      const updatedUserInfo = {
-        ...userInfo,
-        ...socialProfiles,
-        expires_at: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString() // 12 hours from now
-      };
-      await onSaveAndShareVibe(result, updatedUserInfo);
-      setHasSavedOrAttemptedSave(true);
-      setShowSocialDialog(false);
-    }
-  };
-
   const handleShareAndSave = async (platform: 'twitter' | 'whatsapp' | 'facebook' | 'instagram') => {
-    // Remove saving on share, only share
     const shareBaseUrl = window.location.origin;
     const shareText = `I got ${getGenderSpecificTitle()} on the Vibe Check quiz! What's your aura today? ✨ Check it out!`;
     let url = '';
@@ -162,7 +144,50 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
     
     window.open(url, '_blank');
   };
-  
+
+  const handleShowcase = () => {
+    setShowSocialDialog(true);
+  };
+
+  const handleSocialSubmit = async () => {
+    if (!socialProfiles.displayName.trim()) {
+      toast({
+        title: "Name Required",
+        description: "Please enter a display name to showcase your vibe",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const updatedUserInfo: UserInfo = {
+        username: socialProfiles.displayName,
+        age: userInfo?.age ?? null,
+        gender: userInfo?.gender ?? null,
+        instagram: socialProfiles.instagram,
+        twitter: socialProfiles.twitter,
+        facebook: socialProfiles.facebook,
+        displayName: socialProfiles.displayName,
+        isAnonymous: socialProfiles.isAnonymous
+      };
+
+      await onSaveAndShareVibe(result, updatedUserInfo);
+      setHasSavedOrAttemptedSave(true);
+      setShowSocialDialog(false);
+      toast({
+        title: "Success! 🎉",
+        description: "Your vibe has been added to the gallery",
+      });
+    } catch (error) {
+      console.error('Error saving vibe:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save your vibe. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-4 md:p-6 text-white">
       <Card ref={resultCardRef} className={`w-full max-w-2xl ${result.color || 'bg-primary'} shadow-vibrant-lg rounded-2xl p-6 md:p-8 relative overflow-hidden`}>
@@ -186,7 +211,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
           <p className="text-md md:text-lg mb-6">{result.description}</p>
           
           <div className="my-6">
-            <p className="text-sm text-white/80 mb-3">Share your vibe & add it to the gallery! 👇</p>
+            <p className="text-sm text-white/80 mb-3">Share your vibe! 👇</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <Button 
                 onClick={() => handleShareAndSave('twitter')} 
@@ -227,13 +252,15 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
             >
               <Download size={18} className="mr-2" /> Download Image
             </Button>
-            <Button
-              onClick={handleShowcase}
-              variant="outline"
-              className="w-full sm:w-auto bg-white/20 hover:bg-white/30 border-white/50 text-white rounded-lg text-md py-3 px-5 transition-transform transform hover:scale-105"
-            >
-              <ImageIcon size={18} className="mr-2" /> Showcase My Vibe
-            </Button>
+            {!hasSavedOrAttemptedSave && (
+              <Button
+                onClick={handleShowcase}
+                variant="outline"
+                className="w-full sm:w-auto bg-white/20 hover:bg-white/30 border-white/50 text-white rounded-lg text-md py-3 px-5 transition-transform transform hover:scale-105"
+              >
+                <ImageIcon size={18} className="mr-2" /> Showcase My Vibe
+              </Button>
+            )}
           </div>
 
           <Button
@@ -248,66 +275,59 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
       <Dialog open={showSocialDialog} onOpenChange={setShowSocialDialog}>
         <DialogContent className="bg-card/90 backdrop-blur-md text-white border-primary/50">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-display">Showcase Your Vibe! ✨</DialogTitle>
-            <DialogDescription className="text-white/80">
-              Add your social profiles (optional) to showcase your vibe in our gallery
+            <DialogTitle className="text-2xl font-display">Showcase Your Vibe ✨</DialogTitle>
+            <DialogDescription className="text-primary-foreground/80">
+              Share your vibe in our gallery! Fill in your details below.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 mt-4">
+          <div className="space-y-4 py-4">
             <div>
-              <Label htmlFor="displayName">Display Name</Label>
+              <Label htmlFor="displayName" className="text-white/90">Display Name</Label>
               <Input
                 id="displayName"
                 value={socialProfiles.displayName}
                 onChange={(e) => setSocialProfiles(prev => ({ ...prev, displayName: e.target.value }))}
+                placeholder="Your name or alias"
                 className="bg-background/50 border-primary/50 text-white"
               />
             </div>
             <div>
-              <Label htmlFor="instagram">Instagram Handle (Optional)</Label>
+              <Label htmlFor="instagram" className="text-white/90">Instagram Handle (Optional)</Label>
               <Input
                 id="instagram"
                 value={socialProfiles.instagram}
                 onChange={(e) => setSocialProfiles(prev => ({ ...prev, instagram: e.target.value }))}
-                className="bg-background/50 border-primary/50 text-white"
                 placeholder="@username"
+                className="bg-background/50 border-primary/50 text-white"
               />
             </div>
             <div>
-              <Label htmlFor="twitter">Twitter Handle (Optional)</Label>
+              <Label htmlFor="twitter" className="text-white/90">Twitter Handle (Optional)</Label>
               <Input
                 id="twitter"
                 value={socialProfiles.twitter}
                 onChange={(e) => setSocialProfiles(prev => ({ ...prev, twitter: e.target.value }))}
-                className="bg-background/50 border-primary/50 text-white"
                 placeholder="@username"
+                className="bg-background/50 border-primary/50 text-white"
               />
             </div>
             <div>
-              <Label htmlFor="facebook">Facebook Profile (Optional)</Label>
+              <Label htmlFor="facebook" className="text-white/90">Facebook Username (Optional)</Label>
               <Input
                 id="facebook"
                 value={socialProfiles.facebook}
                 onChange={(e) => setSocialProfiles(prev => ({ ...prev, facebook: e.target.value }))}
+                placeholder="username"
                 className="bg-background/50 border-primary/50 text-white"
-                placeholder="facebook.com/username"
               />
             </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="isAnonymous"
-                checked={socialProfiles.isAnonymous}
-                onChange={(e) => setSocialProfiles(prev => ({ ...prev, isAnonymous: e.target.checked }))}
-                className="rounded border-primary/50"
-              />
-              <Label htmlFor="isAnonymous">Show as Anonymous</Label>
-            </div>
+          </div>
+          <div className="flex justify-end space-x-3">
             <Button
               onClick={handleSocialSubmit}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105 active:scale-95"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
-              Showcase My Vibe! ✨
+              Showcase My Vibe
             </Button>
           </div>
         </DialogContent>
