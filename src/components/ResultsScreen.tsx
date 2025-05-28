@@ -83,7 +83,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
               <p class="text-2xl mb-8">${result.description}</p>
             </div>
             <div class="mt-12 pt-8 border-t border-white/20">
-              <p class="text-xl text-white/80">Find your vibe at vibecheck.com ✨</p>
+              <p class="text-xl text-white/80">Find your vibe at vibe-check-v1.vercel.app ✨</p>
             </div>
           </div>
         `;
