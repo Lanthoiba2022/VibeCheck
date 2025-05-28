@@ -7,4 +7,3 @@ Techstack:
 - React
 - shadcn-ui
 - Tailwind CSS
-# VibeCheck
