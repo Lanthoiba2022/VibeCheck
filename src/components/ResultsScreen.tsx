@@ -90,7 +90,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
                 <p class="text-base md:text-lg mb-6 font-medium break-words">${result.description}</p>
               </div>
               <div class="mt-8 pt-6 border-t border-white/40">
-                <p class="text-base md:text-lg text-white">Find your vibe at vibe-check-v1.vercel.app ✨</p>
+                <p class="text-base md:text-lg text-white">Find your vibe at "vibe-check-v1.vercel.app" ✨</p>
               </div>
             </div>
           </div>
