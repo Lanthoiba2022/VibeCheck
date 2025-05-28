@@ -72,19 +72,20 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
         const tempDiv = document.createElement('div');
         tempDiv.className = 'fixed top-0 left-0 -z-50';
         tempDiv.innerHTML = `
-          <div class="w-screen h-screen flex items-center justify-center ${result.color || 'bg-primary'}">
-            <div class="w-full max-w-4xl mx-auto p-8 md:p-12 text-white text-center">
+          <div class="w-screen h-screen flex items-center justify-center ${result.color || 'bg-primary'} relative">
+            <div class="absolute inset-0 bg-black/30"></div>
+            <div class="w-full max-w-5xl mx-auto p-8 md:p-12 text-white text-center relative z-10">
               <div class="mb-8">
-                <p class="text-2xl md:text-3xl font-semibold text-white/80 mb-4">${userInfo?.username || 'Anonymous'}</p>
-                <p class="text-4xl md:text-5xl font-semibold text-white/80 mb-8">Your Vibe Today Is...</p>
-                <h1 class="text-6xl md:text-8xl font-display text-white drop-shadow-md mb-8">
+                <p class="text-2xl md:text-3xl font-semibold text-white mb-4">${userInfo?.username || 'Anonymous'}</p>
+                <p class="text-4xl md:text-5xl font-semibold text-white mb-8">Your Vibe Today Is...</p>
+                <h1 class="text-5xl md:text-7xl font-display text-white drop-shadow-lg mb-8 break-words">
                   ${result.emoji} ${getGenderSpecificTitle()}
                 </h1>
-                <p class="text-2xl md:text-3xl mb-6 italic">"${result.quote}"</p>
-                <p class="text-xl md:text-2xl mb-8">${result.description}</p>
+                <p class="text-xl md:text-2xl mb-6 italic font-medium break-words">"${result.quote}"</p>
+                <p class="text-lg md:text-xl mb-8 font-medium break-words">${result.description}</p>
               </div>
-              <div class="mt-12 pt-8 border-t border-white/20">
-                <p class="text-xl text-white/80">Find your vibe at vibe-check-v1.vercel.app ✨</p>
+              <div class="mt-12 pt-8 border-t border-white/40">
+                <p class="text-lg md:text-xl text-white">Find your vibe at vibe-check-v1.vercel.app ✨</p>
               </div>
             </div>
           </div>
@@ -97,7 +98,9 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ result, onRestartQuiz, on
           width: window.innerWidth,
           height: window.innerHeight,
           windowWidth: window.innerWidth,
-          windowHeight: window.innerHeight
+          windowHeight: window.innerHeight,
+          logging: false,
+          useCORS: true
         });
         
         const link = document.createElement('a');
